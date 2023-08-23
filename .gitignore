@@ -365,3 +365,5 @@ FodyWeavers.xsd
 /VehicleManager/appsettings.json
 /VehicleManager/appsettings.Development.json
 /APIRental/appsettings.json
+/APIRental/appsettings.json/appsettings.Development.json
+/APIRental/appsettings.Development.json
