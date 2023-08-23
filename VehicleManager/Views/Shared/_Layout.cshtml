@@ -1,0 +1,173 @@
+﻿@{
+    bool isAdmin = Context.Request.Cookies["Role"] == "Admin" ? true : false;
+    if(Context.Request.Cookies["FirstRun"] == null) Context.Response.Cookies.Append("FirstRun", "true");
+}
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"] - FiveTwo Car Rental</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet" asp-append-version="true" />
+
+    <link rel="stylesheet" href="/css/open-iconic-bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="/css/animate.css" asp-append-version="true" />
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.dataTables.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.3/css/dataTables.bootstrap5.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.3/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/rowreorder/1.3.2/css/rowReorder.dataTables.min.css" asp-append-version="true" />
+
+
+    <link rel="stylesheet" href="/css/owl.carousel.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="/css/owl.theme.default.min.css"asp-append-version="true" />
+    <link rel="stylesheet" href="/css/magnific-popup.css" asp-append-version="true" />
+
+    <link rel="stylesheet" href="/css/aos.css"asp-append-version="true" />
+
+    <link rel="stylesheet" href="/css/ionicons.min.css" asp-append-version="true" />
+
+    <link rel="stylesheet" href="/css/bootstrap-datepicker.css"asp-append-version="true" />
+    <link rel="stylesheet" href="/css/jquery.timepicker.css"asp-append-version="true" />
+
+
+    <link rel="stylesheet" href="/css/flaticon.css"asp-append-version="true" />
+    <link rel="stylesheet" href="/css/icomoon.css"asp-append-version="true" />
+    <link rel="stylesheet" href="/css/style.css" asp-append-version="true" />
+
+    <link rel="stylesheet" href="/css/Site.css" asp-append-version="true" />
+</head>
+<body> 
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light scrolled awake" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Five<span>Two</span></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="true" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Menu
+            </button>
+
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        <li id="nav-home" class="nav-item">
+                            <a class="nav-link nav-highlight" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-highlight" asp-area="" asp-controller="VehicleCategories" asp-action="Index">Categories</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-highlight" asp-area="" asp-controller="Customers" asp-action="Index">Customers</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-highlight" asp-area="" asp-controller="Rentals" asp-action="Index">Bookings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-highlight"  asp-area="" asp-controller="Cars" asp-action="Index">Cars</a>
+                        </li>
+                    }
+                </ul>
+                <partial name="_LoginPartial" />
+            </div>
+        </div>
+    </nav>
+    <!-- END nav -->
+
+    @RenderBody()
+
+    <footer class="ftco-footer ftco-bg-dark ftco-section">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-md">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2"><a href="#" class="logo">Five<span>Two</span></a></h2>
+                        <p>Fivetwo Car Rental - The only ride you need, from the guys you trust!</p>
+                        <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
+                            <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                            <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                            <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="ftco-footer-widget mb-4 ml-md-5">
+                        <h2 class="ftco-heading-2">Information</h2>
+                        <ul class="list-unstyled">
+                            <li><a href="#" class="py-2 d-block">About</a></li>
+                            <li><a href="#" class="py-2 d-block">Services</a></li>
+                            <li><a href="#" class="py-2 d-block">Term and Conditions</a></li>
+                            <li><a href="#" class="py-2 d-block">Best Price Guarantee</a></li>
+                            <li><a href="#" class="py-2 d-block">Privacy &amp; Cookies Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">Customer Support</h2>
+                        <ul class="list-unstyled">
+                            <li><a href="#" class="py-2 d-block">FAQ</a></li>
+                            <li><a href="#" class="py-2 d-block">Payment Option</a></li>
+                            <li><a href="#" class="py-2 d-block">Booking Tips</a></li>
+                            <li><a href="#" class="py-2 d-block">How it works</a></li>
+                            <li><a href="#" class="py-2 d-block">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">Have a Questions?</h2>
+                        <div class="block-23 mb-3">
+                            <ul>
+                                <li><span class="icon icon-map-marker"></span><span class="text">Östra Järnvägsgatan 29, 111 20 Stockholm</span></li>
+                                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+46 8 253025</span></a></li>
+                                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@fivetwo.com</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- loader -->
+    <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" /><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00" /></svg></div>
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/jquery.easing.1.3.js"></script>
+    <script src="/js/jquery.waypoints.min.js"></script>
+    <script src="/js/jquery.stellar.min.js"></script>
+    <script src="/js/owl.carousel.min.js"></script>
+    <script src="/js/jquery.magnific-popup.min.js"></script>
+    <script src="/js/aos.js"></script>
+    <script src="/js/jquery.animateNumber.min.js"></script>
+    <script src="/js/bootstrap-datepicker.js"></script>
+    <script src="/js/jquery.timepicker.min.js"></script>
+    <script src="/js/scrollax.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+    <script src="/js/google-map.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/site.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script>
+        $(document).ready(function () {
+            if ('ontouchstart' in document.documentElement) {
+                $('.dropdown-toggle').on('touchstart', function (e) {
+                    e.preventDefault();
+                    $(this).siblings('.dropdown-menu').toggle();
+                });
+            }
+        });
+
+
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

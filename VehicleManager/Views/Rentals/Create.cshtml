@@ -1,0 +1,233 @@
+﻿@model VehicleManager.ViewModels.RentalCustomerVM
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<section class="ftco-section bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 ftco-animate">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="col-md-12">
+                                    <div class="car-details">
+                                        <img class="rounded shadow-sm" src="@Model.ImgUrl" style="max-width: 100%" />
+                                        <div class="text text-center">
+                                            <span class="subheading">@Model.Name</span>
+                                            <h2>@Model.Brand @Model.Model</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md d-flex align-self-stretch ftco-animate fadeInUp ftco-animated">
+                                    <div class="media block-6 services">
+                                        <div class="media-body py-md-4">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-dashboard"></span></div>
+                                                <div class="text">
+                                                    <h3 class="heading mb-0 pl-3">
+                                                        Mileage
+                                                        <span>40,000</span>
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md d-flex align-self-stretch ftco-animate fadeInUp ftco-animated">
+                                    <div class="media block-6 services">
+                                        <div class="media-body py-md-4">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-pistons"></span></div>
+                                                <div class="text">
+                                                    <h3 class="heading mb-0 pl-3">
+                                                        Transmission
+                                                        <span>Manual</span>
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md d-flex align-self-stretch ftco-animate fadeInUp ftco-animated">
+                                    <div class="media block-6 services">
+                                        <div class="media-body py-md-4">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-car-seat"></span></div>
+                                                <div class="text">
+                                                    <h3 class="heading mb-0 pl-3">
+                                                        Seats
+                                                        <span>5 Adults</span>
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md d-flex align-self-stretch ftco-animate fadeInUp ftco-animated">
+                                    <div class="media block-6 services">
+                                        <div class="media-body py-md-4">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-backpack"></span></div>
+                                                <div class="text">
+                                                    <h3 class="heading mb-0 pl-3">
+                                                        Luggage
+                                                        <span>4 Bags</span>
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md d-flex align-self-stretch ftco-animate fadeInUp ftco-animated">
+                                    <div class="media block-6 services">
+                                        <div class="media-body py-md-4">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-diesel"></span></div>
+                                                <div class="text">
+                                                    <h3 class="heading mb-0 pl-3">
+                                                        Fuel
+                                                        <span>Petrol</span>
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 pills">
+                                    <div class="bd-example bd-example-tabs">
+                                        <div class="d-flex justify-content-center">
+                                            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" id="pills-description-tab" data-toggle="pill" href="#pills-description" role="tab" aria-controls="pills-description" aria-expanded="true">Features</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="tab-content" id="pills-tabContent">
+                                            <div class="tab-pane fade show active" id="pills-description" role="tabpanel" aria-labelledby="pills-description-tab">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <ul class="features">
+                                                            <li class="check"><span class="ion-ios-checkmark"></span>Airconditions</li>
+                                                            <li class="check"><span class="ion-ios-checkmark"></span>Child Seat</li>
+                                                            <li class="check"><span class="ion-ios-checkmark"></span>GPS</li>
+                                                            <li class="check"><span class="ion-ios-checkmark"></span>Luggage</li>
+                                                            <li class="check"><span class="ion-ios-checkmark"></span>Music</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <ul class="features">
+                                                            <li class="check"><span class="ion-ios-checkmark"></span>Seat Belt</li>
+                                                            <li class="remove"><span class="ion-ios-close"></span>Sleeping Bed</li>
+                                                            <li class="check"><span class="ion-ios-checkmark"></span>Water</li>
+                                                            <li class="check"><span class="ion-ios-checkmark"></span>Bluetooth</li>
+                                                            <li class="remove"><span class="ion-ios-close"></span>Onboard computer</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <ul class="features">
+                                                            <li class="check"><span class="ion-ios-checkmark"></span>Audio input</li>
+                                                            <li class="check"><span class="ion-ios-checkmark"></span>Long Term Trips</li>
+                                                            <li class="check"><span class="ion-ios-checkmark"></span>Car Kit</li>
+                                                            <li class="check"><span class="ion-ios-checkmark"></span>Central locking</li>
+                                                            <li class="check"><span class="ion-ios-checkmark"></span>Climate control</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <input type="hidden" asp-for="CarId" class="form-control" />
+                            <span asp-validation-for="CarId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" asp-for="CustomerId" class="form-control" />
+                            <span asp-validation-for="CustomerId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" asp-for="PickUpDate" class="form-control" />
+                            <span asp-validation-for="PickUpDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" asp-for="ReturnDate" class="form-control" />
+                            <span asp-validation-for="ReturnDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" asp-for="BookingMade" class="form-control" />
+                            <span asp-validation-for="BookingMade" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" asp-for="TotalPrice" class="form-control" />
+                            <span asp-validation-for="TotalPrice" class="text-danger"></span>
+                        </div>
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="FirstName" class="control-label"></label>
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="LastName" class="control-label"></label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Address" class="control-label"></label>
+                            <input asp-for="Address" class="form-control" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="City" class="control-label"></label>
+                            <input asp-for="City" class="form-control" />
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="DriverLicenceNr" class="control-label"></label>
+                            <input asp-for="DriverLicenceNr" class="form-control" />
+                            <span asp-validation-for="DriverLicenceNr" class="text-danger"></span>
+                        </div>
+                        <div class="alert alert-info">
+                             Period: @Html.DisplayFor(p => Model.PickUpDate) - @Html.DisplayFor(r => Model.ReturnDate)
+                        </div>
+                        <div class="d-flex mb-3 alert alert-success">
+                            <span>Total Price:</span>
+                            <p class="price ml-auto mb-0">€@Html.DisplayFor(m=>Model.TotalPrice)</p>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" value="Book" class="btn btn-primary" />
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

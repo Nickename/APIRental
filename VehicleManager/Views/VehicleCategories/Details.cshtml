@@ -1,0 +1,62 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@model VehicleManager.Models.VehicleCategory
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<section class="ftco-section bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 ftco-animate">
+                <div class="align-items-center">
+                    <div>
+                        <dl class="row">
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(model => model.Name)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(model => model.Name)
+                            </dd>
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(model => model.Description)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(model => model.Description)
+                            </dd>
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(model => model.PricePerDay)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(model => model.PricePerDay) €/day
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+                @if (HttpContextAccessor?.HttpContext?.Request.Cookies["Role"] == "Admin")
+                {
+                    <div>
+                        <a asp-action="Edit" asp-route-id="@Model?.VehicleCategoryId">Edit</a> |
+                        <a asp-action="Index">Back to List</a>
+                    </div>
+                }
+
+                <h4>Example car from category</h4>
+                @if (Model.Cars.Count != 0)
+                {
+                    <div class="col-md-4 ftco-animate">
+                        <div class="card my-3 border-0 shadow-sm">
+                            <a href="#" class="stretched-link"></a>
+                            <img src="@Model.Cars[0].ImgUrl" class="card-img-top" alt="@Model.Cars[0].Brand @Model.Cars[0].Model" style="object-fit:cover; height:12em;" />
+                            <div class="card-body align-text-bottom">
+                                <h5 class="card-title">@Model.Cars[0].Brand @Model.Cars[0].Model</h5>
+                                <p class="text-primary">€@Model.PricePerDay<span class="price"> /day - @Model.Name</span></p>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</section>

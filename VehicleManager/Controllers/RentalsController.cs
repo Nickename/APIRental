@@ -1,0 +1,305 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.Data;
+using VehicleManager.Data;
+using VehicleManager.Helpers;
+using VehicleManager.Models;
+using VehicleManager.ViewModels;
+
+namespace VehicleManager.Controllers
+{
+    [Authorize(Roles = "Admin,Customer")]
+    public class RentalsController : Controller
+    {
+        private readonly ICar carRepo;
+        private readonly IRental rentalRepo;
+        private readonly IVehicleCategory categoryRepo;
+        private readonly ICustomer customerRepo;
+
+        public RentalsController(ICar carRepo, IRental rentalRepo, IVehicleCategory categoryRep, ICustomer customerRepo)
+        {
+            this.carRepo = carRepo;
+            this.rentalRepo = rentalRepo;
+            this.categoryRepo = categoryRep;
+            this.customerRepo = customerRepo;
+        }
+
+        // GET: Rentals
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Index(List<int> readyForPickUp)
+        {
+            if (readyForPickUp != null && readyForPickUp.Any())
+            {
+                foreach (var rentalId in readyForPickUp)
+                {
+                    var rental = await rentalRepo.GetByIdAsync(rentalId);
+                    if (rental != null)
+                    {
+                        rental.ReadyForPickUp = true;
+                        await rentalRepo.UpdateAsync(rental);
+                    }
+                }
+            }
+
+            var rentals = await rentalRepo.GetAllAsync();
+            var rentalViewModels = new List<RentalViewModel>();
+
+            foreach (var rental in rentals)
+            {
+                var car = await carRepo.GetByIdAsync(rental.CarId);
+                var customer = await customerRepo.GetByIdAsync(rental.CustomerId);
+
+                if (car is null || customer is null)
+                {
+                    return NotFound();
+                }
+                var rentalViewModel = new RentalViewModel
+                {
+                    Id = rental.RentalId,
+                    PickUpDate = rental.PickUpDate,
+                    ReturnDate = rental.ReturnDate,
+                    BookingMade = rental.BookingMade,
+                    TotalPrice = rental.TotalPrice,
+                    PlateNumber = car.PlateNumber,
+                    FullName = customer.FullName,
+                    CarId = car.CarId,
+                    ReadyForPickUp= rental.ReadyForPickUp
+                };
+                rentalViewModels.Add(rentalViewModel);
+            }
+
+            //ViewBag.Rentals = await rentalRepo.GetAllAsync();
+
+
+            return await rentalRepo.GetAllAsync() != null ?
+                        View(rentalViewModels) :
+                        Problem("Rental is null.");
+        }
+
+        // GET: Rentals/Details/5
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null || await rentalRepo.GetAllAsync() == null)
+            {
+                return NotFound();
+            }
+
+            var rental = await rentalRepo.GetByIdAsync(id);
+
+            if (rental == null)
+            {
+                return NotFound();
+            }
+
+            return View(rental);
+        }
+
+        // GET: Rentals/Create
+        public async Task<IActionResult> Create(int carId, DateTime pickupDate, DateTime returnDate)
+        {
+            var car = await carRepo.GetByIdAsync(carId);
+            if (car == null)
+            {
+                return Redirect("/Home");
+            }
+
+            var category = await categoryRepo.GetByIdAsync(car.VehicleCategoryId);
+            
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            RentalCustomerVM rentalCustomerVM = new()
+            {
+                PickUpDate = pickupDate,
+                ReturnDate = returnDate,
+                TotalPrice = (returnDate - pickupDate).TotalDays * category.PricePerDay,
+                ImgUrl = car.ImgUrl,
+                Brand = car.Brand,
+                Model = car.Model,
+                Name = category.Name
+            };
+
+            return View(rentalCustomerVM);
+        }
+
+        // POST: Rentals/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("RentalId,CarId,CustomerId,PickUpDate,ReturnDate,BookingMade,TotalPrice")] Rental rental, Customer customer)
+        {
+
+            if (ModelState.IsValid )
+            {
+                await customerRepo.CreateAsync(customer);
+                rental.CustomerId = customerRepo.GetAllAsync().Result.Last().CustomerId;
+                await rentalRepo.CreateAsync(rental);
+                Car car = await carRepo.GetByIdAsync(rental.CarId) ?? new();
+
+                RentalCustomerVM customerVM = new()
+                {
+                    Address = customer.Address,
+                    BookingMade = rental.BookingMade,
+                    DriverLicenceNr = customer.DriverLicenceNr,
+                    Brand = car.Brand,
+                    CarId = car.CarId,
+                    City = customer.City,
+                    CustomerId = customer.CustomerId,
+                    Email = customer.Email,
+                    FirstName = customer.FirstName,
+                    LastName = customer.LastName,
+                    PickUpDate = rental.PickUpDate,
+                    ReturnDate = rental.ReturnDate,
+                    TotalPrice = rental.TotalPrice,
+                    ImgUrl = car.ImgUrl,
+                    PlateNumber = car.PlateNumber,
+                    RentalId = rentalRepo.GetAllAsync().Result.Last().RentalId
+                };
+
+                return RedirectToAction(nameof(Confirmation), customerVM);
+            }
+            return View(rental);
+        }
+
+        // GET: Rentals/Edit/5
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null || await rentalRepo.GetAllAsync() == null)
+            {
+                return NotFound();
+            }
+
+            var rental = await rentalRepo.GetByIdAsync(id);
+            if (rental == null)
+            {
+                return NotFound();
+            }
+
+            var car = await carRepo.GetByIdAsync(rental.CarId);
+            if (car == null)
+            {
+                return Redirect("/Home");
+            }
+
+            var category = await categoryRepo.GetByIdAsync(car.VehicleCategoryId);
+            if (category == null)
+            {
+                return Redirect("/Home");
+            }
+
+            rental.TotalPrice = (rental.ReturnDate - rental.PickUpDate).TotalDays * category.PricePerDay;
+
+            ViewBag.Cars = new SelectList(await carRepo.GetAllAsync(), "CarId", "PlateNumber");
+            return View(rental);
+        }
+
+        // POST: Rentals/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int id, [Bind("RentalId,CarId,CustomerId,PickUpDate,ReturnDate,BookingMade,TotalPrice")] Rental rental)
+        {
+            if (id != rental.RentalId)
+            {
+                return NotFound();
+            }
+
+            var thisCarsRentals = await rentalRepo.GetAllAsync($"r => r.CarId == {rental.CarId}");
+            var currentRental = thisCarsRentals.Where(r => r.RentalId == rental.RentalId).FirstOrDefault();
+
+            if (currentRental == null) 
+            {
+                return NotFound();
+            }
+            thisCarsRentals.Remove(currentRental);
+
+            if (thisCarsRentals.Where(r => r.ReturnDate > rental.PickUpDate && r.PickUpDate < rental.ReturnDate).Any())
+            {
+                ModelState.AddModelError(nameof(rental.PickUpDate), "Already booked during this time period!");
+            }
+
+            else if (ModelState.IsValid)
+            {
+                try
+                {
+                    await rentalRepo.UpdateAsync(rental);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!RentalExists(rental.RentalId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewBag.Cars = new SelectList(await carRepo.GetAllAsync(), "CarId", "PlateNumber");
+            return View(rental);
+        }
+
+        // GET: Rentals/Delete/5
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null || await rentalRepo.GetAllAsync() == null)
+            {
+                return NotFound();
+            }
+
+            var rental = await rentalRepo.GetByIdAsync(id);
+
+            if (rental == null)
+            {
+                return NotFound();
+            }
+
+            return View(rental);
+        }
+
+        // POST: Rentals/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            if (await rentalRepo.GetAllAsync() == null)
+            {
+                return Problem("Rental is null.");
+            }
+            var rental = await rentalRepo.GetByIdAsync(id);
+            if (rental != null)
+            {
+                await rentalRepo.DeleteAsync(rental);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool RentalExists(int id)
+        {
+            return rentalRepo.GetByIdAsync(id) is not null;
+        }
+
+        //GET Confirmation
+        public ActionResult Confirmation(RentalCustomerVM customerVM)
+        {
+            return customerVM != null ?
+                        View(customerVM) :
+                        Problem("The booking is null.");
+        }
+    }
+}
